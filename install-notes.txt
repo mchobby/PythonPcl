@@ -1,0 +1,19 @@
+Install Notes
+-------------
+
+=== Needed Tools ===
+* Python 2.7 
+* Pip installer
+* GIT
+
+-- Install Pip --
+sudo apt-get install python-pip
+
+-- Python CUPS --
+Only if not installed yet 
+sudo apt-get install python-cups python-dev
+
+=== Needed Python Libs ===
+Use pip to install the following libs
+  * pyserial  -- needed to serial communication over USB.
+

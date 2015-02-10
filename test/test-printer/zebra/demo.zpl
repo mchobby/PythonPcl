@@ -1,0 +1,3 @@
+^XA
+^FO100,50^ADN,36,20^FDxxx^FS
+^XZ
