@@ -58,7 +58,7 @@ class ZplDocument( PclDocument ):
 					 'Q' : None,
 					 'R' : None,
 					 'S' : None,
-					 'T' : None,
+					 'T' : None, # Use 17, 8 as size for a nice Bold effect
 					 'U' : None,
 					 'V' : None }
 					 

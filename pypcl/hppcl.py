@@ -30,6 +30,16 @@ class HpPclDocument( PclDocument ):
 	
 	PRINTER_CPI = [ 5, 9, 10, 12, 15, 16, 16.66, 20 ] # Character Per Inch supporter
 	
+	# Printer Units
+	#   See PCL 5 "Printer Language Technical Referenc Manual", Cursor Positionning, pg 97
+	PRINTER_UNIT_PCL = 0 
+	
+	PRINTER_UNITS = { PRINTER_UNIT_PCL: 'Unit PCL. default unit-per-inch = 300 dots per inch' }
+	
+	# Graphic Raster Infortmation
+	RASTER_DPI_RESOLUTIONS = [75, 100, 150, 200, 300, 600] # Supported resolution when printing graphics 
+	
+	# Paper Source
 	PRINTER_PAPER_SOURCE = { 0:  'Print the current page', # paper source remains unchanged.
 							 1:  'Feed paper from the a printer-specific tray.', # prefered value to use when init the printer job
 							 2:  'Feed paper from manual input.',
@@ -84,6 +94,14 @@ class HpPclDocument( PclDocument ):
 							  'extra-black': 6,
 							  'ultra-black': 7 }
 							  
+	def __init__(  self, target_encoding = 'cp850', printer_adapter = None, title = '' ):
+		""" initialisisation of PclDocument and specific HpPclDocument information """
+		super( HpPclDocument, self ).__init__( target_encoding, printer_adapter, title )
+		
+		# Define the Default Printer Unit
+		self._current_unit = self.PRINTER_UNIT_PCL
+		self._unit_per_inch = 300 # Nombre of unit per inch (default, UNIT_PCL is dot-per-inch and set to 300 dot per inch) 
+							  
 	# === Override ===	
 	def sending( self ):
 		""" sending() is called when PclDocument.send() want  me to 
@@ -95,6 +113,24 @@ class HpPclDocument( PclDocument ):
 				self.printer_adapter.send( bytes( pcl_line_tuple[1].encode( self.target_encoding ) ) )
 			else: # Binary 
 				self.printer_adapter.send( pcl_line_tuple[1] ) # Tuple[1] already contains a bytes() type	
+	# === Properties ===
+	@property
+	def current_unit( self ):
+		""" identify the type of unit used on the printer (one of the PRINTER_UNITS).
+			default is PRINTER_UNIT_PCL """
+			
+		return self._current_unit
+		
+	@property
+	def unit_per_inch( self ):
+		""" Returns the number of "unit per inch". This depends on:
+		1) the current_unit currently selected on the printer
+		2) the potential change of unit_per_inch (résolution) for PCL Printing 
+		
+		The usual default is PCL_UNIT with 300 dots_per_inch as unit_per_inch
+		"""
+		return self._unit_per_inch
+				
 			
 	# === HP Specific Tools ===
 	def write_esc( self, unicode_seq ):
@@ -271,3 +307,114 @@ class HpPclDocument( PclDocument ):
 		""" Easiest switch of bold/non-bold text. """
 		self.stroke_weight( 'bold' if set_bold else 'text' )
 		
+	def cursor_move( self, position, unit = None ):
+		""" Move the cursor to x,y position. Distance expressed in PCL Unit.
+		
+		By default, PCL Unit is unit_per_inch = 300 dot/inch """
+		if unit == None:
+			unit = self._current_unit
+		
+		assert unit in self.PRINTER_UNITS, "This unit is not supported"
+		assert isinstance( position, tuple ) and len(position)==2, "position must be a (x_position,y_position) tuple" 
+		
+		self.write_esc( u'*p%ix%iY' % position )
+		
+	# === Raster Graphic BASIC TOOLS ===
+	
+	def raster_start_graphic( self, at_current_cursor_pos = True ):
+		""" Start Raster Graphic (with data)
+			False : 0 -> At x-position = 0
+			True : 1 -> At current x-position of the cursor position """
+		self.write_esc( u'*r%iA' % (1 if at_current_cursor_pos else 0 ) )
+	
+	def raster_end_graphic( self ):
+		""" Ends a Raster Graphic part """
+		self.write_esc( u'*rC' )
+		
+	def raster_presentation_mode( self ):
+		""" Raster Graphic Presentation Mode.
+		
+		*** ONLY SUPPORT A DEFAULT AT THE MOMENT ***
+		
+		use the default  0 -> Orientation of the logical page. """
+		self.write_esc( u'*r%iF' % (0) )
+
+	def raster_set_resolution( self, dpi_resolution = 75 ):
+		""" Set the Raster Graphics resolution in dpi (default = 75 dpi) """
+		assert isinstance( dpi_resolution, int ), 'params must be int' 
+		assert dpi_resolution in self.RASTER_DPI_RESOLUTIONS, 'dpi_resolution must be in %s' % ( self.RASTER_DPI_RESOLUTIONS )
+		
+		self.write_esc( u'*t%iR' % (dpi_resolution) )
+
+	 
+	def raster_senddata_str( self, lst ):
+		""" Print the image, stored as list of bit (encoded into string for
+			easy code writing, use a space every 8 bits for reading, 
+			the space are ignored by the code)
+		
+			example:
+				>>> d.raster_senddata_str( ['00000000 00000000 10000000 00000000', '00000000 00000000 11000000 00000000' ] ) 
+		"""
+		assert isinstance( lst, list ) and len( lst )>0, 'parameter must be a list of string' 
+		assert isinstance( lst[0], str), 'parameter must be a list of string'
+		
+		lst_int = []
+		for line in [l.replace(' ','') for l in lst]:
+			lst_int.append( [int(c) for c in line] )	
+
+		# Here, lst_int contains a structure like the following
+		# print( lst_int )
+		# [ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+		#   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+		#   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+		#   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ]
+		return self.raster_senddata_int( lst_int )
+
+	def raster_senddata_int( self, lst ):
+		""" Print the image, stored as list of integer (one integer per bit).
+			This function is reserverd for easy code writing
+		
+			example:
+				>>> d.raster_senddata_int( [ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ] ) 
+		"""
+		assert isinstance( lst, list ) and len( lst )>0, 'parameter must be a list of (list of int). Each int 1 or 0 is a dot!'
+		assert isinstance( lst[0], list) and len(lst[0])>0 , 'parameter must be a list of (list of int). Each int 1 or 0 is a dot!'
+		assert isinstance( lst[0][0], int ), 'parameter must be a list of (list of int). Each int 1 or 0 is a dot!'
+		
+		def split_by_n( seq, n ):
+			"""A generator to divide a sequence into chunks of n units."""
+			while seq:
+				yield seq[:n]
+				seq = seq[n:]
+				
+		def arr_to_bytes( lst ):
+			""" this function produce a "bytes" type from list of ASCII code 
+		
+				arr_to_bytes( [0,0,248,0] ) -> '\x00\x00\xf8\x00' 
+			"""
+			return bytes( ''.join( [ chr(x) for x in lst ] ) )
+		
+		
+		# Create an array of Bit position and corresponding Decimal Weight
+		lBitWeight = [ (iIndex,2**(7-iIndex)) for iIndex in range(8) ]
+		
+		for row in lst:
+			#print( '--- ROW ---' )
+			lDecValue = [] # List of the decimal value to eject to the printer
+			iByteCount =  len(row)/8
+			if len(row)%8 > 0: # if we have some bits more then add a byte
+				iByteCount += 1
+			self.write_esc( u'*b%iW' % iByteCount ) # how many bytes to write.
+
+			#Split in seq of 8 int/8 bits.
+			for bits in split_by_n( row, 8 ):
+				# Ensure just 8 bits (pad right with 0 if needed) 
+				bits = bits+[0]*(8-len(bits))
+				# encode the bits as a decimal value
+				iDecValue = 0
+				for iIndex, iWeight in lBitWeight:
+					iDecValue += bits[iIndex]*iWeight
+				lDecValue.append( iDecValue )
+
+			#print( lDecValue )
+			self.write_bytes( arr_to_bytes( lDecValue ) )
