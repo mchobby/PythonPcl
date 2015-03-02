@@ -418,3 +418,34 @@ class HpPclDocument( PclDocument ):
 
 			#print( lDecValue )
 			self.write_bytes( arr_to_bytes( lDecValue ) )
+
+	def raster_senddata_bitmap( self, image ):
+		""" Send a image loaded with scipy.misc.imread(). The image is 
+			and array of array of floats (0.0=black .. 255.0=white)
+			
+			See the following article to figure out how to create the bitmap file with Gimp
+			http://domeu.blogspot.be/2015/03/transformer-une-image-en-bmp-2-couleurs.html 
+			
+			Example:
+			>>> d = HpPclDocument( 'cp850', medium)
+			>>> ...
+			>>> image = imread( 'mybitmap.bmp', flatten = '0')
+			>>> d.raster_start_graphic( at_current_cursor_pos = True )
+			>>> d.raster_senddata_bitmap( image )
+			>>> d.raster_end_graphic()
+		"""
+		
+		def lst_convert_to_int( lst_float ):
+			""" convert a list of float 0..255 to integer 1..0. 
+				float = 0 means a black dot.
+				float = 255 means a white/none dot. """
+			
+			return [ 0 if f > 128 else 1 for f in lst_float ] 
+		
+		def lst_convert_rows( lst_row ):
+			""" converts all the image rows to list of int """
+			return [ lst_convert_to_int( row ) for row in lst_row ] 
+
+		# print( lst_convert_rows( image ) )
+		self.raster_senddata_int( lst_convert_rows( image ) )
+	

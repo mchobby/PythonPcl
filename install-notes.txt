@@ -13,6 +13,12 @@ sudo apt-get install python-pip
 Only if not installed yet 
 sudo apt-get install python-cups python-dev
 
+-- Python Sci.Py --
+Only if you want to print bitmaps in PCL. We just install the essential packages.
+Project source: http://www.scipy.org/install.html
+
+sudo apt-get install python-numpy python-scipy python-matplotlib
+
 === Needed Python Libs ===
 Use pip to install the following libs
   * pyserial  -- needed to serial communication over USB.
