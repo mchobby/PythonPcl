@@ -1,3 +1,6 @@
 # Ignorer les fichier python compilé
 *.pyc
 
+# Gimp files
+*.xcf
+
