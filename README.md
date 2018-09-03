@@ -1,7 +1,7 @@
 Hi, I'm currently reworking this README file for better presentation.
 
 # Python PCL / ZPL
-[Python PCL / ZPL logo](res/logo/PythonPcl-480px)
+![Python PCL / ZPL logo](res/logo/PythonPcl-480px)
 
 Python PCL / ZPL allows you to control directly Zebra Printer & HP Printer with ZPL and HP PCL languages from Python.
 
@@ -11,12 +11,12 @@ Python PCL / ZPL allows you to control directly Zebra Printer & HP Printer with 
 
 This library will not try to deal with Raster Printer Driver (AKA Windows way of work). Instead it opens a connection directly to the printer, emit the PCL/ZPL commands and close the connection.
 
-The library just contains a layer of classes to easy the work of PCL/ZPL command emitting. 
+The library just contains a layer of classes to easy the work of PCL/ZPL command emitting.
 
 ## What is ZPL?
 ZPL is a "tuned version" of PCL for Zebra label printer. Initially started for HP printers, this project evolved to support Zebra ZPL format (used every day on Zebra LP2824 Plus and Zebra GK420t).
 
-[Zebra Label Printer](res/images/zebra-GK420T.png)
+![Zebra Label Printer](res/images/zebra-GK420T.png)
 
 ## What is PCL?
 ------------
