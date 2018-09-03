@@ -14,6 +14,8 @@ ZPL is a "tuned version" of PCL for Zebra label printer. Initially started for H
 ------------
 PCL stand for "Printer Command Line". Meaning that some printer behavior (font, font size, bold, graphics, barcode) can be controled by including some special command inside the text stream being printer. Those special commands are usually introduced by the escape character (ASCII #27). As a result, such printer command are also commonly named "Escape Sequence".  
 
+![HP Printer](res/images/hp-pcl.png)
+
 The advantage of PCL approach is to support advanced printer feature on:
 1) Archaic development plateform (eg: Clipper, Habour Projet)
 2) Operating Systems having few ressources (Raspberry Pi, MicroControleur, PyBoard)
@@ -51,6 +53,9 @@ Epson should also support similar feature but I will examine this point later (w
 Brother has an affordable Brother ticket printer (QL-570) is not well supported on Linux machine. Controling that printer directly seems to be a nightmare (even with technical documentation). So this library _will not manage_ the QL-570.
 
 # Network Printer, USB/Serial printer, Managed printer
+
+Please browse the content of `test` sub-folder, it contains many examples to
+help you starting with this code.
 
 ## Network Printer
 To print on a Network printer, you must use a `PrinterSocketAdapter` class which
@@ -132,9 +137,9 @@ The needed steps and testing have been described in the following files
 * /test/test-printer/zebra/demo*.* files
 
 _We strongly recommand to read the following files_
-* /test/test-printer/zebra/demo-README.txt
-* /test/test-printer/zebra/demo.zpl
-* /test/test-printer/zebra/demo-zebra-raw-queue-cups.pdf
+* [/test/test-printer/zebra/demo-README.txt](test/test-printer/zebra/demo-README.txt)
+* [/test/test-printer/zebra/demo.zpl](test/test-printer/zebra/demo.zpl)
+* [/test/test-printer/zebra/demo-zebra-raw-queue-cups.pdf](test/test-printer/zebra/demo-zebra-raw-queue-cups.pdf)
 
 The last file `demo-zebra-raw-queue-cups.pdf` is in french but you should be able
 to easily identify the various screen of `Raw Queue` installation for a the Zebra USB printer.
