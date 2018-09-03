@@ -11,7 +11,7 @@ ZPL is a "tuned version" of PCL for Zebra label printer. Initially started for H
 ![Zebra Label Printer](res/images/zebra-GK420T.png)
 
 ## What is PCL?
-------------
+
 PCL stand for "Printer Command Line". Meaning that some printer behavior (font, font size, bold, graphics, barcode) can be controled by including some special command inside the text stream being printer. Those special commands are usually introduced by the escape character (ASCII #27). As a result, such printer command are also commonly named "Escape Sequence".  
 
 ![HP Printer](res/images/hp-pcl.png)
