@@ -54,8 +54,8 @@ Brother has an affordable Brother ticket printer (QL-570) is not well supported 
 
 # Network Printer, USB/Serial printer, Managed printer
 
-Please browse the content of `test` sub-folder, it contains many examples to
-help you starting with this code.
+Please browse the content of `test` sub-folder, it contains many examples + image
+capture to get started with the code.
 
 ## Network Printer
 To print on a Network printer, you must use a `PrinterSocketAdapter` class which
@@ -64,6 +64,8 @@ abstract communication over the an Ethernet Network.
 When creating such `PrinterSocketAdapter` adapter, you must give a tuple of `('Printer_IP_adress', Printer_port )` .
 
 On HP Network printer, the usual printer port is 9100.
+
+Example: medium = `PrinterSocketAdapter( ('192.168.1.206', 9100) )`
 
 ## USB Printer
 You can also connect an USB printer. In most of the time, such printer will be taken in charge by CUPS on Linux machine.
