@@ -145,3 +145,6 @@ _We strongly recommand to read the following files_
 
 The last file `demo-zebra-raw-queue-cups.pdf` is in french but you should be able
 to easily identify the various screen of `Raw Queue` installation for a the Zebra USB printer.
+
+### Use a Raspberry-Pi as CUPS server to share USB Zebra printer
+This is described in our article "[Imprimante Zebra USB en réseau avec CUPS sur Raspberry-Pi](http://domeu.blogspot.com/2020/01/imprimante-zebra-usb-en-reseau-avec.html)" (french)
