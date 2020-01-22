@@ -1,3 +1,4 @@
+pushgit.sh
 # Ignorer les fichier python compilé
 *.pyc
 
