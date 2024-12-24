@@ -74,7 +74,7 @@ class PclDocument( list ):
 		assert isinstance( item, tuple ), 'PclDocument can only append tuple (pcl_type!=binary, unicode_data) or (pcl_type==binary, bytes)'
 		assert isinstance( item[0], int ), 'tuple[0] must be an data_type (int)'
 		assert item[0] in PCL_DATA_TYPE.items.keys(), 'data_type is not valid'
-		assert ((item[0] != PCL_DATA_TYPE.BINARY) and isinstance( item[1], unicode )) or ((item[0] == PCL_DATA_TYPE.BINARY) and isinstance( item[1], bytes )), 'tuple[1] must be an unicode string or binary!'
+		assert ((item[0] != PCL_DATA_TYPE.BINARY) and isinstance( item[1], str )) or ((item[0] == PCL_DATA_TYPE.BINARY) and isinstance( item[1], bytes )), 'tuple[1] must be an str string or binary!'
 		list.append( self, item )
 
 	def __add__( self, item ):
@@ -183,7 +183,7 @@ class PrinterAdapter( object ):
 	@doc_title.setter
 	def doc_title( self, value ):
 		""" Store the new document name as mentionned by the PclDocument.send() """
-		assert isinstance( value, str ) or isinstance(value, unicode)
+		assert isinstance( value, str ) or isinstance(value, str)
 		self.__doc_title = value
 
 	def open( self ):

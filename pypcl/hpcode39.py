@@ -37,7 +37,7 @@ Licence: This specific file applies the licence as original code.
 History:
   05 feb 2015 - Dominique - create from BarCode39.PRG (clipper)
 """
-from hppcl import HpPclDocument
+from pypcl import HpPclDocument
 from pypcl import PyPclError
 
 class Barcode39Error( PyPclError ):

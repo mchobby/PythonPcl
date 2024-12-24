@@ -60,7 +60,7 @@ class PrinterCupsAdapter( PrinterAdapter ):
 		""" Just print the list of printer queue available on the computer """
 		printers = self.printers
 		for printer in printers:
-			print printer, printers[printer]["device-uri"]
+			print( printer, printers[printer]["device-uri"] )
 
 	def open( self ):
 		""" open the CUPS link """

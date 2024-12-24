@@ -15,6 +15,7 @@ Please, contact us at <info@mchobby.be>
 History:
   09 feb 2015 - Dominique - v 0.1 (first release)
 """
+from functools import reduce
 
 def ean13_checksum(ean_base):
 	"""Calculates the checksum for EAN13-Code.
